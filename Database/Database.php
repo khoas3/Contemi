@@ -103,6 +103,7 @@ class Database {
                     }
                 }
                 return $results;
+
             }else{
                 return false;
             }
@@ -111,6 +112,13 @@ class Database {
         }
     }
 
+    /**
+     * @param $table
+     * @param string $rows
+     * @param null $where
+     * @return int
+     * @throws \Exception
+     */
     public function count($table, $rows = '*', $where = null)
     {
         $q = 'SELECT '.$rows.' FROM '.$table;
