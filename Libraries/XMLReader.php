@@ -46,13 +46,13 @@ class XMLReader {
                 preg_match_all("/<hw>(.*?)<\/hw>/", $blocks[$j], $word_array);
                 $words = $word_array[0];
                 $word = $this->sanitize($words[0]);
-                $results[$j]['w'] = $word;
+                $results[$j][] = $word;
 
                 /* filter definition string */
                 preg_match_all("/<def>(.*?)<\/def>/", $blocks[$j], $def_array);
                 $definitions = $def_array[0];
                 $definition = $this->sanitize($definitions[0]);
-                $results[$j]['def'] = $definition;
+                $results[$j][] = $definition;
             }
         }
 

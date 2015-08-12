@@ -154,13 +154,13 @@ class Database {
             {
                 $insert .= ' ('.$rows.')';
             }
-            for($i = 0; $i < count($values); $i++)
-            {
-                if(is_string($values[$i]))
-                    $values[$i] = '"'.$values[$i].'"';
-            }
-            $values = implode(',',$values);
-            $insert .= ' VALUES ('.$values.')';
+            $values = array(
+                array('test', 'testing'),
+            );
+            $insert = $this->parseToString($values);
+            var_dump($insert);
+            die;
+
             $ins = @mysql_query($insert);
             if($ins)
             {
@@ -168,6 +168,21 @@ class Database {
             }
         }
         return false;
+    }
+
+    /**
+     * @param $values
+     */
+    private function parseToString($values)
+    {
+        foreach($values as $k => &$v){
+            if(is_string($v)){
+                $values[$k] = '"'.$v.'"';
+            } else if(is_array($v)) {
+                $this->parseToString($v);
+            }
+        }
+        return $values;
     }
 
     /**

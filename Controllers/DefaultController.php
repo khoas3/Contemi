@@ -26,12 +26,7 @@ class DefaultController {
         if(is_array($source_file)){
             foreach($source_file as $path){
                 $filterXML = $xmlReader->filterXML($path);
-                foreach($filterXML as $row){
-                    // If dict has this word.
-                    if($db->count('gcide', 'id', "w='".$row['w']."'" ) == 0){
-                        $db->insert('gcide', array($row['w'], $row['def']));
-                    }
-                }
+                $db->insert('gcide', $filterXML, 'w,def');
             }
         }
     }
