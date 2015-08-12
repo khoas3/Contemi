@@ -9,9 +9,10 @@
 error_reporting(-1);
 ini_set('display_errors', 'On');
 
-require('Controllers/DefaultController.php');
+require_once('Controllers/DefaultController.php');
 
 use Controllers\DefaultController;
 
 $main = new DefaultController();
-$main->dumpXML();
+//$main->dumpXML();
+$main->wordChain();

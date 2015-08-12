@@ -12,7 +12,7 @@ namespace Database;
 class Database {
     private $db_host = 'localhost';
     private $db_user = 'root';
-    private $db_pass = 'root';
+    private $db_pass = '';
     private $db_name = 'contemi';
 
     private $conn = false;
@@ -42,7 +42,7 @@ class Database {
                     return false;
                 }
             }else{
-                return false;
+                throw new \Exception('MySQL connection Database error: '. mysql_error());
             }
         }else{
             return true;
@@ -105,10 +105,10 @@ class Database {
                 return $results;
 
             }else{
-                return false;
+                throw new \Exception('Can not execute query string.');
             }
         }else{
-            return false;
+            throw new \Exception('Table does not exist.');
         }
     }
 
@@ -154,12 +154,7 @@ class Database {
             {
                 $insert .= ' ('.$rows.')';
             }
-            $values = array(
-                array('test', 'testing'),
-            );
-            $insert = $this->parseToString($values);
-            var_dump($insert);
-            die;
+            $insert .= $this->parseToString($values);
 
             $ins = @mysql_query($insert);
             if($ins)
@@ -175,14 +170,23 @@ class Database {
      */
     private function parseToString($values)
     {
-        foreach($values as $k => &$v){
-            if(is_string($v)){
-                $values[$k] = '"'.$v.'"';
-            } else if(is_array($v)) {
-                $this->parseToString($v);
+        $sql = $str = '';
+        foreach($values as $v){
+            if(is_array($v))
+            {
+                foreach($v as $key => $value){
+                    if(is_string($value)) {
+                        $v[$key] = '"' . $value . '"';
+                    }
+                }
+                $sql = '('.implode(',', $v).'),';
             }
+            $str .= $sql;
         }
-        return $values;
+        $str = rtrim($str,',');
+        $str = ' VALUES '. $str.';';
+
+        return $str;
     }
 
     /**

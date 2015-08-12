@@ -8,14 +8,19 @@
 
 namespace Controllers;
 
-require('Libraries/XMLReader.php');
-require('Database/Database.php');
+require_once('Libraries/XMLReader.php');
+require_once('Libraries/WordChain.php');
+require_once('Database/Database.php');
 
 use Database\Database;
 use Libraries\XMLReader;
+use Libraries\WordChain;
 
 
 class DefaultController {
+    /**
+     * @throws \Exception
+     */
     public function dumpXML()
     {
         $xmlReader = new XMLReader();
@@ -29,5 +34,25 @@ class DefaultController {
                 $db->insert('gcide', $filterXML, 'w,def');
             }
         }
+        if($conn){
+            $db->disconnect();
+        }
+    }
+
+    /**
+     *
+     */
+    public function wordChain()
+    {
+        $results = $words = array();
+        $db = new Database();
+        $conn = $db->connect();
+        $results = $db->select('gcide', 'w');
+        foreach($results as $row){
+            $words[] = $row['w'];
+        }
+        $wordChain = new WordChain();
+        $adjacentWords = $wordChain->getAdjacentWords('cat', $words);
+        var_dump($adjacentWords);
     }
 }
