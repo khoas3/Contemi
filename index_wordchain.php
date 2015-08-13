@@ -14,4 +14,4 @@ require_once('Controllers/DefaultController.php');
 use Controllers\DefaultController;
 
 $main = new DefaultController();
-$main->dumpXML();
+$main->wordChain();

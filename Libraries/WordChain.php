@@ -26,6 +26,31 @@ class WordChain {
         return $shortestChain;
     }
 
+    /**
+     * @param $from
+     * @param $to
+     * @param array $stack
+     * @return array
+     */
+    public function recursion($from, $to, $stack = array())
+    {
+        array_push($stack, $from);
+        if($from === $to){
+            return $stack;
+        }
+
+        if(!in_array($from, $stack)){
+            $this->recursion($from, $to, $stack);
+        }
+
+        return array();
+    }
+
+    /**
+     * @param $a
+     * @param $dictionary
+     * @return array
+     */
     public function getAdjacentWords($a, $dictionary)
     {
         $adjacentWords = array();
@@ -52,11 +77,21 @@ class WordChain {
         return $adjacentWords;
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return bool
+     */
     public function sameLength($a, $b)
     {
         return mb_strlen($a) === mb_strlen($b);
     }
 
+    /**
+     * @param $a
+     * @param $b
+     * @return bool
+     */
     public function oneLetterApart($a, $b)
     {
         $a = mb_strtolower($a);
