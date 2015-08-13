@@ -12,7 +12,7 @@ namespace Database;
 class Database {
     private $db_host = 'localhost';
     private $db_user = 'root';
-    private $db_pass = 'root';
+    private $db_pass = '';
     private $db_name = 'contemi';
 
     private $conn = false;

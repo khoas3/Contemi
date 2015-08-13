@@ -11,10 +11,12 @@ namespace Controllers;
 require_once('Libraries/XMLReader.php');
 require_once('Libraries/WordChain.php');
 require_once('Database/Database.php');
+require_once('Models/Dictionary.php');
 
 use Database\Database;
 use Libraries\XMLReader;
 use Libraries\WordChain;
+use Models\Dictionary;
 
 
 class DefaultController {
@@ -44,15 +46,10 @@ class DefaultController {
      */
     public function wordChain()
     {
-        $results = $words = array();
         $db = new Database();
-        $conn = $db->connect();
-        $results = $db->select('gcide', 'w');
-        foreach($results as $row){
-            $words[] = $row['w'];
-        }
-        $wordChain = new WordChain();
-        $adjacentWords = $wordChain->getAdjacentWords('cat', $words);
-        var_dump($adjacentWords);
+        $dict = new Dictionary($db);
+        $wordChain = new WordChain($dict);
+        $shortestChain = $wordChain->getShortestChain('cat', 'dog');
+        var_dump($shortestChain);
     }
 }

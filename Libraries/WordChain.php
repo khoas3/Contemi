@@ -9,7 +9,18 @@
 namespace Libraries;
 
 
+use Models\Dictionary;
+
 class WordChain {
+    private $dict;
+    private $words = array();
+
+    public function __construct(Dictionary $dict)
+    {
+        $this->dict = $dict;
+        $this->dict->setDict();
+        $this->words = $this->dict->getDict();
+    }
 
     /**
      * @param $from
@@ -19,9 +30,16 @@ class WordChain {
     public function getShortestChain($from, $to)
     {
         $shortestChain = array();
+        /* If 2 words are not in dict */
+        if(!$this->dictHas($from) && !$this->dictHas($to)) {
+            return array();
+        }
+
         if (!$this->sameLength($from, $to)) {
             return array();
         }
+
+        $shortestChain = $this->recursion($from, $to);
 
         return $shortestChain;
     }
@@ -39,8 +57,15 @@ class WordChain {
             return $stack;
         }
 
-        if(!in_array($from, $stack)){
-            $this->recursion($from, $to, $stack);
+        $adjacentWords = $this->getAdjacentWords($from, $this->words);
+        foreach($adjacentWords as $w)
+        {
+            if(!in_array($w, $stack)){
+                if($this->recursion($w, $to, $stack)){
+                    return $stack;
+                }
+                array_pop($stack);
+            }
         }
 
         return array();
@@ -98,5 +123,19 @@ class WordChain {
         $b = mb_strtolower($b);
 
         return levenshtein($a,$b, 2, 1, 2) === 1;
+    }
+
+    /**
+     * @param $word
+     * @return bool
+     */
+    public function dictHas($word)
+    {
+        foreach($this->words as $w){
+            if($w === $word){
+                return true;
+            }
+        }
+        return false;
     }
 }
